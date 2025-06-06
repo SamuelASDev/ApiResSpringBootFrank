@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.primeiraapi.apirest.model.AlunoModel;
 import com.primeiraapi.apirest.repository.AlunoRepository;
 
@@ -30,5 +30,18 @@ public class AlunoService {
         return alunoRepository.findAll(); 
     }
 
-    
+    @Transactional 
+    public boolean excluir(Long id) {
+        // verifica se o aluno existe
+        if (alunoRepository.existsById(id)) {
+            try {
+                alunoRepository.deleteById(id);
+                return true; 
+            } catch (Exception e) {
+                System.err.println("Erro no serviço ao excluir aluno com ID " + id + ": " + e.getMessage());
+                return false; 
+            }
+        }
+        return false;
+    }
 }
