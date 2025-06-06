@@ -101,6 +101,18 @@ public class AlunoController {
         }
     }
 
+    
+    @GetMapping("/turno/{turno}") 
+    public ResponseEntity<List<AlunoModel>> buscarPorTurno(@PathVariable String turno) {
+        List<AlunoModel> alunosEncontrados = alunoService.buscarPorTurno(turno);
+
+        if (alunosEncontrados.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+        } else {
+            return new ResponseEntity<>(alunosEncontrados, HttpStatus.OK); 
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AlunoModel> buscarPorId(@PathVariable Long id){
         Optional<AlunoModel> aluno = alunoService.buscarPorId(id);

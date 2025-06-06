@@ -112,4 +112,8 @@ public class AlunoService {
     public List<AlunoModel> buscarPorCurso(String curso) {
         return alunoRepository.findByCursoContainingIgnoreCase(curso);
     }
+
+    public List<AlunoModel> buscarPorTurno(String turno) {
+        return alunoRepository.findByTurnoContainingIgnoreCase(turno);
+    }
 }
