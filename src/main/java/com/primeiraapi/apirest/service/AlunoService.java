@@ -44,4 +44,56 @@ public class AlunoService {
         }
         return false;
     }
+
+    @Transactional 
+    public AlunoModel atualizar(Long id, AlunoModel alunoDetalhes) {
+        // Busca o aluno
+        Optional<AlunoModel> alunoExistente = alunoRepository.findById(id);
+
+        if (alunoExistente.isPresent()) {
+            AlunoModel alunoParaAtualizar = alunoExistente.get();
+
+            // Atualiza os campos do aluno existente com os novos detalhes
+            // verifica se os campos dos detalhes não são nulos antes de atualizar
+            
+            //PessoaModel (herdado)
+            if (alunoDetalhes.getNome() != null) {
+                alunoParaAtualizar.setNome(alunoDetalhes.getNome());
+            }
+            if (alunoDetalhes.getIdade() != 0) { 
+                alunoParaAtualizar.setIdade(alunoDetalhes.getIdade());
+            }
+            if (alunoDetalhes.getSexo() != null) {
+                alunoParaAtualizar.setSexo(alunoDetalhes.getSexo());
+            }
+
+            //AlunoModel
+            if (alunoDetalhes.getCampus() != null) {
+                alunoParaAtualizar.setCampus(alunoDetalhes.getCampus());
+            }
+            if (alunoDetalhes.getPolo() != null) {
+                alunoParaAtualizar.setPolo(alunoDetalhes.getPolo());
+            }
+            if (alunoDetalhes.getEmail_institucional() != null) {
+                alunoParaAtualizar.setEmail_institucional(alunoDetalhes.getEmail_institucional());
+            }
+            if (alunoDetalhes.getCoordenacao() != null) {
+                alunoParaAtualizar.setCoordenacao(alunoDetalhes.getCoordenacao());
+            }
+            if (alunoDetalhes.getCurso() != null) {
+                alunoParaAtualizar.setCurso(alunoDetalhes.getCurso());
+            }
+            if (alunoDetalhes.getSituacao() != null) {
+                alunoParaAtualizar.setSituacao(alunoDetalhes.getSituacao());
+            }
+            if (alunoDetalhes.getPeriodo_entrada() != null) {
+                alunoParaAtualizar.setPeriodo_entrada(alunoDetalhes.getPeriodo_entrada());
+            }
+
+            // atualiza o aluno no banco de dados
+            return alunoRepository.save(alunoParaAtualizar); 
+        } else {
+            return null; // aluno não encontrado
+        }
+    }
 }

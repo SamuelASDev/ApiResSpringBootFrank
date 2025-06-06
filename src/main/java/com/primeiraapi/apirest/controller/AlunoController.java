@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,4 +67,24 @@ public class AlunoController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<AlunoModel> atualizar(@PathVariable Long id, @Valid @RequestBody AlunoModel alunoDetalhes) {
+
+        // Se o ID do alunoDetalhes não for nulo e for diferente do ID do path indica erro
+        if (alunoDetalhes.getIdPessoa() != null && !alunoDetalhes.getIdPessoa().equals(id)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request
+        }
+
+        try {
+            AlunoModel alunoAtualizado = alunoService.atualizar(id, alunoDetalhes);
+            if (alunoAtualizado != null) {
+                return new ResponseEntity<>(alunoAtualizado, HttpStatus.OK); // 200 OK
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao atualizar aluno com ID " + id + ": " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
+        }
+    }
 }
