@@ -1,5 +1,6 @@
 package com.primeiraapi.apirest.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,17 @@ public class AlunoController {
         } catch (Exception e) {
             return new ResponseEntity<>(retorno, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AlunoModel>> buscarTodos() {
+        List<AlunoModel> alunos = alunoService.buscarTodos();
+        if (alunos.isEmpty()) {
+            //retorna 204 No Content se estiver vazia
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        // retorna 200 OK se tiver alunos na lista
+        return new ResponseEntity<>(alunos, HttpStatus.OK);
     }
 
 }

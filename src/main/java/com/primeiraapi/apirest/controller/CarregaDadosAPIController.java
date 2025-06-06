@@ -24,7 +24,7 @@ public class CarregaDadosAPIController {
         // Verifica se o filePath fornecido na requisição está vazio ou nulo
         if (!StringUtils.hasText(filePath)) {
             // Se estiver vazio, usa o caminho padrao.
-            filePath = "C:/Users/Samuel/Desktop/apirest/src/main/resources/alunostads.csv";
+            filePath = "src\\main\\resources\\alunostads.csv";
             System.out.println("Nenhum caminho de arquivo fornecido. Usando o arquivo padrão: " + filePath);
         } else {
             // Caso contrário, usa o caminho fornecido
