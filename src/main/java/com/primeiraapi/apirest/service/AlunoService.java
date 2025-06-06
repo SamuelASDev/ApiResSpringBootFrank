@@ -22,9 +22,6 @@ public class AlunoService {
             return e.getMessage();
         }
     }
-    public Optional<AlunoModel> buscarPorId(Long id){
-        return alunoRepository.findById(id);
-    }
 
     public List<AlunoModel> buscarTodos() {
         return alunoRepository.findAll(); 
@@ -89,11 +86,30 @@ public class AlunoService {
             if (alunoDetalhes.getPeriodo_entrada() != null) {
                 alunoParaAtualizar.setPeriodo_entrada(alunoDetalhes.getPeriodo_entrada());
             }
+            if (alunoDetalhes.getTurno() != null) { 
+                alunoParaAtualizar.setTurno(alunoDetalhes.getTurno());
+            }
+            if (alunoDetalhes.getCep() != null) { 
+                alunoParaAtualizar.setCep(alunoDetalhes.getCep());
+            }
 
             // atualiza o aluno no banco de dados
-            return alunoRepository.save(alunoParaAtualizar); 
+            return alunoRepository.saveAndFlush(alunoParaAtualizar);
         } else {
             return null; // aluno não encontrado
         }
+    }
+
+
+    public List<AlunoModel> buscarPorNome(String nome) {
+        return alunoRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    public Optional<AlunoModel> buscarPorId(Long id){
+        return alunoRepository.findById(id);
+    }
+
+    public List<AlunoModel> buscarPorCurso(String curso) {
+        return alunoRepository.findByCursoContainingIgnoreCase(curso);
     }
 }

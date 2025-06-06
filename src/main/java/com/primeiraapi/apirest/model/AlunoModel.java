@@ -3,40 +3,46 @@ package com.primeiraapi.apirest.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank; 
-import jakarta.validation.constraints.Email; 
-import java.io.Serializable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern; 
 
 @Entity
 @Table(name = "aluno")
 @PrimaryKeyJoinColumn(name = "idPessoa")
-public class AlunoModel extends PessoaModel implements Serializable {
+public class AlunoModel extends PessoaModel {
     private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "O campus não pode estar em branco.")
     private String campus;
 
-    private String polo; 
+    private String polo;
 
     @NotBlank(message = "O e-mail institucional não pode estar em branco.")
-    @Email(message = "Formato de e-mail inválido.") 
+    @Email(message = "Formato de e-mail inválido.")
     private String email_institucional;
 
-    private String coordenacao; 
+    private String coordenacao;
 
     @NotBlank(message = "O curso não pode estar em branco.")
     private String curso;
 
-    private String situacao; 
+    private String situacao;
 
     @NotBlank(message = "O período de entrada não pode estar em branco.")
     private String periodo_entrada;
+
+    private String turno;
+
+    @Pattern(regexp = "\\d{8}", message = "CEP inválido. Deve ter 8 dígitos.") // Validação básica do CEP
+    private String cep;
 
     public AlunoModel() {
     }
 
     public AlunoModel(String campus, String polo, String email_institucional,
-                      String coordenacao, String curso, String situacao, String periodo_entrada) {
+    String coordenacao, String curso, String situacao, String periodo_entrada,
+    String turno, String cep) { 
         this.campus = campus;
         this.polo = polo;
         this.email_institucional = email_institucional;
@@ -44,11 +50,14 @@ public class AlunoModel extends PessoaModel implements Serializable {
         this.curso = curso;
         this.situacao = situacao;
         this.periodo_entrada = periodo_entrada;
+        this.turno = turno;
+        this.cep = cep;
     }
 
     public AlunoModel(String nome, int idade, String sexo,
-                      String campus, String polo, String email_institucional,
-                      String coordenacao, String curso, String situacao, String periodo_entrada) {
+    String campus, String polo, String email_institucional,
+    String coordenacao, String curso, String situacao, String periodo_entrada,
+    String turno, String cep) { 
         super(nome, idade, sexo);
         this.campus = campus;
         this.polo = polo;
@@ -57,9 +66,11 @@ public class AlunoModel extends PessoaModel implements Serializable {
         this.curso = curso;
         this.situacao = situacao;
         this.periodo_entrada = periodo_entrada;
+        this.turno = turno;
+        this.cep = cep;
     }
 
-    // Getters e Setters
+
     public String getCampus() {
         return campus;
     }
@@ -114,5 +125,21 @@ public class AlunoModel extends PessoaModel implements Serializable {
 
     public void setPeriodo_entrada(String periodo_entrada) {
         this.periodo_entrada = periodo_entrada;
+    }
+
+    public String getTurno() {  
+        return turno;
+    }
+
+    public void setTurno(String turno) { 
+        this.turno = turno;
+    }
+
+    public String getCep() {  
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 }

@@ -1,10 +1,10 @@
-package com.primeiraapi.apirest.service; 
+package com.primeiraapi.apirest.service;
 
 import com.primeiraapi.apirest.model.AlunoModel;
 import com.primeiraapi.apirest.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; 
-import org.springframework.transaction.annotation.Transactional; 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -13,19 +13,17 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List; // Usando List para a coleção retornada
+import java.util.List;
 
 
+@Service
+public class CarregaDadosService {
 
-
-@Service 
-public class CarregaDadosService { 
-
-    //instancia do AlunoRepository injetado pelo JpaRepository
-    @Autowired 
+    // Instância do AlunoRepository injetado pelo Spring
+    @Autowired
     private AlunoRepository alunoRepository;
 
-    //responsável por ler o arquivo CSV e converter cada linha em um objeto AlunoModel
+    // Responsável por ler o arquivo CSV e converter cada linha em um objeto AlunoModel
     public List<AlunoModel> carregarEValidarAlunosDoArquivo(String filePath) throws Exception {
         List<AlunoModel> alunosCarregados = new ArrayList<>();
         try (Reader reader = new InputStreamReader(new FileInputStream(filePath), "UTF-8");
@@ -35,7 +33,7 @@ public class CarregaDadosService {
             if (headerLine == null) {
                 throw new IllegalArgumentException("Arquivo vazio ou sem cabeçalho.");
             }
-            //pegar os campos pelas virgulas
+            // Pega os campos do cabeçalho pelas vírgulas
             String[] headers = headerLine.split(",");
 
             HashMap<String, Integer> camposEsperadosMap = new HashMap<>();
@@ -44,14 +42,17 @@ public class CarregaDadosService {
             camposEsperadosMap.put("polo", -1);
             camposEsperadosMap.put("coordenacao", -1);
             camposEsperadosMap.put("curso", -1);
-            camposEsperadosMap.put("nome_estudante", -1); 
+            camposEsperadosMap.put("nome_estudante", -1);
             camposEsperadosMap.put("situacao", -1);
             camposEsperadosMap.put("idade", -1);
             camposEsperadosMap.put("sexo", -1);
             camposEsperadosMap.put("email_institucional", -1);
             camposEsperadosMap.put("periodo_entrada", -1);
+            camposEsperadosMap.put("turno", -1);
+            camposEsperadosMap.put("cep", -1);
 
-            //percorre o array para analisar os campos esperados e colocar os campos nao enconntrados 
+
+            // Percorre o array para analisar os campos esperados e identificar campos não encontrados
             List<String> camposNaoEncontrados = new ArrayList<>();
             for (String campoEsperado : camposEsperadosMap.keySet()) {
                 int index = Arrays.asList(headers).indexOf(campoEsperado);
@@ -69,7 +70,7 @@ public class CarregaDadosService {
 
             String linha;
             while ((linha = bf.readLine()) != null) {
-                //dividir os dados da linha por , em um array
+                // Divide os dados da linha por ',' em um array
                 String[] data = linha.split(",");
                 AlunoModel aluno = new AlunoModel();
 
@@ -88,8 +89,11 @@ public class CarregaDadosService {
                 if (camposEsperadosMap.get("sexo") != -1) aluno.setSexo(data[camposEsperadosMap.get("sexo")]);
                 if (camposEsperadosMap.get("email_institucional") != -1) aluno.setEmail_institucional(data[camposEsperadosMap.get("email_institucional")]);
                 if (camposEsperadosMap.get("periodo_entrada") != -1) aluno.setPeriodo_entrada(data[camposEsperadosMap.get("periodo_entrada")]);
+                if (camposEsperadosMap.get("turno") != -1) aluno.setTurno(data[camposEsperadosMap.get("turno")]);
+                if (camposEsperadosMap.get("cep") != -1) aluno.setCep(data[camposEsperadosMap.get("cep")]);
 
-                 alunosCarregados.add(aluno); 
+
+                alunosCarregados.add(aluno);
             }
         } catch (Exception e) {
             System.err.println("Erro ao carregar o arquivo: " + filePath + " - " + e.getMessage());
@@ -98,7 +102,7 @@ public class CarregaDadosService {
         return alunosCarregados;
     }
 
-    @Transactional 
+    @Transactional
     public List<AlunoModel> inserirNoBanco(List<AlunoModel> listaDeAlunos) {
         // Salvando todos os alunos
         return alunoRepository.saveAll(listaDeAlunos);

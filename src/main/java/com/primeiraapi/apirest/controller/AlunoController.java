@@ -26,15 +26,6 @@ public class AlunoController {
     @Autowired
     private AlunoService alunoService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AlunoModel> buscarPorId(@PathVariable Long id){
-        Optional<AlunoModel> aluno = alunoService.buscarPorId(id);
-        if (aluno.isPresent()) {
-            return new ResponseEntity<>(aluno.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new AlunoModel(), HttpStatus.NOT_FOUND);
-    }
-
     @PostMapping
     public ResponseEntity<String> inserir(@Valid @RequestBody AlunoModel aluno){
         String retorno = alunoService.inserir(aluno);
@@ -70,7 +61,7 @@ public class AlunoController {
     @PutMapping("/{id}")
     public ResponseEntity<AlunoModel> atualizar(@PathVariable Long id, @Valid @RequestBody AlunoModel alunoDetalhes) {
 
-        // Se o ID do alunoDetalhes não for nulo e for diferente do ID do path indica erro
+        // caso tenha um id no corpo do request e ele for diferente do id informado na url vai dar erro
         if (alunoDetalhes.getIdPessoa() != null && !alunoDetalhes.getIdPessoa().equals(id)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request
         }
@@ -86,5 +77,36 @@ public class AlunoController {
             System.err.println("Erro ao atualizar aluno com ID " + id + ": " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
         }
+    }
+
+    @GetMapping("/nome/{nome}") 
+    public ResponseEntity<List<AlunoModel>> buscarPorNome(@PathVariable String nome) {
+        List<AlunoModel> alunosEncontrados = alunoService.buscarPorNome(nome);
+
+        if (alunosEncontrados.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+        } else {
+            return new ResponseEntity<>(alunosEncontrados, HttpStatus.OK); 
+        }
+    }
+
+    @GetMapping("/curso/{curso}") 
+    public ResponseEntity<List<AlunoModel>> buscarPorCurso(@PathVariable String curso) {
+        List<AlunoModel> alunosEncontrados = alunoService.buscarPorCurso(curso);
+
+        if (alunosEncontrados.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+        } else {
+            return new ResponseEntity<>(alunosEncontrados, HttpStatus.OK); 
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AlunoModel> buscarPorId(@PathVariable Long id){
+        Optional<AlunoModel> aluno = alunoService.buscarPorId(id);
+        if (aluno.isPresent()) {
+            return new ResponseEntity<>(aluno.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new AlunoModel(), HttpStatus.NOT_FOUND);
     }
 }
