@@ -1,0 +1,9 @@
+http://localhost:8080/carregar-dados?filePath=C:/Users/Samuel/Desktop/apirest/src/main/resources/alunostads.csv
+
+
+//salvar
+//buscar Tudo
+//buscar por id
+//buscar por nome
+//editar
+//remover
